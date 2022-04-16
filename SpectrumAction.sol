@@ -85,7 +85,7 @@ contract spectrumAction {
     }
 
     // Bid Submission: step 1 - 5
-    function bidSubmission(int i, uint[] prices) public external {
+    function bidSubmission(int i, uint[] prices) public payable {
         uint M = findMax(prices);
         require(ledger[msg.sender] + msg.value >= M, "Not enough deposit");
 
