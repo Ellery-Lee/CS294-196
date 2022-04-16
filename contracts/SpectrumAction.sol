@@ -17,6 +17,10 @@ contract SpectrumAction {
 
     }
 
+    struct Graph {
+        mapping(uint => uint[]) g;
+    }
+
     //order book
     S[] public orderBook;
 
@@ -48,7 +52,9 @@ contract SpectrumAction {
     mapping(address => uint) public ledger;
     mapping(address => uint) public ESPOOL;
 
-    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
+    //    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
+
+    Graph[] graphList;
 
     mapping(address => uint[]) public A;    //  The result of the final spectrum allocation
 
@@ -153,7 +159,11 @@ contract SpectrumAction {
                     adj[j - 1] = G[spId][i][j];
                 }
 
-                graph[spId][G[spId][i][0]] = adj;
+                Graph storage graphConstruct = graphList.push();
+
+                graphConstruct.g[G[spId][i][0]] = adj;
+
+                delete adj;
             }
         }
     }
