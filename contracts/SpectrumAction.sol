@@ -77,13 +77,17 @@ contract SpectrumAction {
     }
 
     // *Registration: step 6, sorting in increasing order
-    function sortOrderBook(uint left, uint right) internal {
+    function sortOrderBook() public {
+        quickSort(0, orderBook.length);
+    }
+
+
+    function quickSort(uint left, uint right) internal {
         if (left < right) {
             uint pivot = partition(left, right);
-            sortOrderBook(left, pivot - 1);
-            sortOrderBook(pivot + 1, right);
+            quickSort(left, pivot - 1);
+            quickSort(pivot + 1, right);
         }
-
     }
 
     function partition(uint left, uint right) internal returns (uint){
