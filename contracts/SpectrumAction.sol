@@ -157,6 +157,18 @@ contract SpectrumAction {
             }
         }
     }
+    // print graph
+    function getGraph() public returns(uint[][][] memory G){
+        uint[][][] memory tempGraph;
+        for(uint spId = 0; spId < orderBook.length; spId++){
+            for(uint bIndex = 0; bIndex < B.length; bIndex++){
+                for(uint priceIndex = 0; priceIndex < graph[spId][B[bIndex]].length; priceIndex++){
+                    tempGraph[spId][bIndex][priceIndex] = graph[spId][B[bIndex]][priceIndex];
+                }
+            }
+        }
+        return tempGraph;
+    }
 
     // Group
     function qsort(uint[] storage array) internal {
