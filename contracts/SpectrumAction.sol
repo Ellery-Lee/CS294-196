@@ -43,7 +43,7 @@ contract SpectrumAction {
     mapping(address => uint) public ledger;
     mapping(address => uint) public ESPOOL;
 
-    mapping(address => Bid[]) public graph; // Interference Graph, bid[] is the neighbours
+    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
 
     mapping(address => uint[]) public A;    //  The result of the final spectrum allocation
 
