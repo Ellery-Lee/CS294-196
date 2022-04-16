@@ -43,7 +43,7 @@ contract SpectrumAction {
     mapping(address => uint) public ledger;
     mapping(address => uint) public ESPOOL;
 
-    mapping(address => Bid[]) public graph; // Interference Graph, bid[] is the neighbours
+    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
 
     mapping(address => uint[]) public A;    //  The result of the final spectrum allocation
 
@@ -137,6 +137,22 @@ contract SpectrumAction {
             }
         }
         return max;
+    }
+
+    function constructGraph(uint[][] memory G) public isOwner {
+        for (uint i = 0; i < G.length; i++) {
+            uint curr = G[i][0];
+
+            G[i][0] = G[i][G[i].length - 1];
+
+            uint[] adj;
+
+            for (int j = 1; j < curr.length; j++) {
+                adj.push(curr[j]);
+            }
+
+            graph[0][curr] = adj;
+        }
     }
 
     // Group
