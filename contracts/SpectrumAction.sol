@@ -1,4 +1,5 @@
 pragma solidity >=0.7.0 <0.9.0;
+import "hardhat/console.sol";
 
 contract SpectrumAction {
 
@@ -24,6 +25,10 @@ contract SpectrumAction {
 
     address[] B;            // Buyer set
 
+    address private owner;
+
+    uint private beginTime;
+
     mapping(address => Bid) public addrToBid;
 
     mapping(address => uint) public ledger;
@@ -35,10 +40,21 @@ contract SpectrumAction {
 
     event logMessage(bytes32 s);
 
+    modifier isOwner() {
+        require(msg.sender == owner, "Caller is not owner");
+        _;
+    }
+
+    constructor() {
+        console.log("Contract deployed by:", msg.sender);
+        owner = msg.sender;
+        beginTime = block.timestamp;
+    }
+
     // Registration: step 2 - 4
     function sellerSubmit(uint i, uint j, uint frequency, uint V, uint T) public payable {
         emit logMessage("Seller Sumbit");
-        require(T > block.timestamp, "Spectrum expire");
+        require(T + beginTime > block.timestamp, "Spectrum expire");
         require(ledger[msg.sender] + msg.value >= V, "Not enough deposit");
 
         ledger[msg.sender] += (msg.value - V);
@@ -49,7 +65,7 @@ contract SpectrumAction {
     // *Registration: step 5
     function deleteExpire() internal {
         for (uint i = 0; i < orderBook.length; i++) {
-            if (orderBook[i].T >= block.timestamp) {
+            if (orderBook[i].T + beginTime >= block.timestamp) {
                 ESPOOL[msg.sender] -= orderBook[i].V;
                 ledger[msg.sender] += orderBook[i].V;
 
@@ -115,5 +131,21 @@ contract SpectrumAction {
     // Allocation & Pricing
     function allocation() internal {}
 
+
+    function getOwner() external view returns (address) {
+        return owner;
+    }
+
+    function getOrderBook() external view returns (S[] memory) {
+        return orderBook;
+    }
+
+    function getLedgerWithAddr(address addr) external view returns (uint) {
+        return ledger[addr];
+    }
+
+    function getESPOOLWithAddr(address addr) external view returns (uint) {
+        return ESPOOL[addr];
+    }
 
 }
