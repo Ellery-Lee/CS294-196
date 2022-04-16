@@ -139,6 +139,20 @@ contract SpectrumAction {
         return max;
     }
 
+    function constructGraph(uint[][][] memory G) public isOwner {
+        for (uint spId = 0; spId < G.length; spId++) {
+            for (uint i = 0; i < G[spId].length; i++) {
+                uint[] memory adj = new uint[](G[spId][i].length - 1);
+
+                for (uint j = 1; j < G[spId][i].length; j++) {
+                    adj[j - 1] = G[spId][i][j];
+                }
+
+                graph[spId][G[spId][i][0]] = adj;
+            }
+        }
+    }
+
     // Group
     function groupOneGraph() internal {
 
