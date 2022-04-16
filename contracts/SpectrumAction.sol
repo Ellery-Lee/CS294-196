@@ -156,7 +156,9 @@ contract SpectrumAction {
     // Group
     function groupOneGraph(mapping(uint => uint[]) memory spectrumGraph) internal {
         uint[] group;
+        uint start = B[0];
 
+        spectrumGraph[start]
     }
 
     function deleteUsedFromGraph() internal {
