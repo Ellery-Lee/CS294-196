@@ -30,7 +30,7 @@ contract SpectrumAction {
         uint[] prices;      // number k spectrum in order book
     }
 
-    address[] B;            // Buyer set
+    uint[] B;            // Buyer set
 
     address private owner;
 
@@ -126,7 +126,7 @@ contract SpectrumAction {
 
         addrToBid[msg.sender] = Bid(i, prices);
         idToAddr[i] = msg.sender;
-        B.push(msg.sender);
+        B.push(i);
     }
 
     function findMax(uint[] memory prices) internal returns (uint) {
@@ -140,7 +140,8 @@ contract SpectrumAction {
     }
 
     // Group
-    function groupOneGraph(Bid[] memory spectrumGraph) internal {
+    function groupOneGraph(mapping(uint => uint[]) memory spectrumGraph) internal {
+        uint[] group;
 
     }
 
