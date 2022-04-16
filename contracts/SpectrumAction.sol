@@ -33,6 +33,8 @@ contract SpectrumAction {
 
     mapping(address => Bid) public addrToBid;
 
+    mapping(uint => address) public idToAddr;
+
     mapping(address => uint) public ledger;
     mapping(address => uint) public ESPOOL;
 
@@ -118,6 +120,7 @@ contract SpectrumAction {
         ESPOOL[msg.sender] += M;
 
         addrToBid[msg.sender] = Bid(i, prices);
+        idToAddr[i] = msg.sender;
         B.push(msg.sender);
     }
 
