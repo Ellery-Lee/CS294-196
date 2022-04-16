@@ -140,7 +140,7 @@ contract SpectrumAction {
     }
 
     // Group
-    function groupOneGraph() internal {
+    function groupOneGraph(Bid[] memory spectrumGraph) internal {
 
     }
 
