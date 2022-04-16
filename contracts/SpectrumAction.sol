@@ -17,10 +17,6 @@ contract SpectrumAction {
 
     }
 
-    struct Graph {
-        mapping(uint => uint[]) g;
-    }
-
     //order book
     S[] public orderBook;
 
@@ -52,9 +48,7 @@ contract SpectrumAction {
     mapping(address => uint) public ledger;
     mapping(address => uint) public ESPOOL;
 
-    //    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
-
-    Graph[] graphList;
+    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
 
     mapping(address => uint[]) public A;    //  The result of the final spectrum allocation
 
@@ -159,25 +153,9 @@ contract SpectrumAction {
                     adj[j - 1] = G[spId][i][j];
                 }
 
-                Graph storage graphConstruct = graphList.push();
-
-                graphConstruct.g[G[spId][i][0]] = adj;
-
-                delete adj;
+                graph[spId][G[spId][i][0]] = adj;
             }
         }
-    }
-    // print graph
-    function getGraph() public returns(uint[][][] memory G){
-        uint[][][] memory tempGraph;
-        for(uint spId = 0; spId < orderBook.length; spId++){
-            for(uint bIndex = 0; bIndex < B.length; bIndex++){
-                for(uint priceIndex = 0; priceIndex < graph[spId][B[bIndex]].length; priceIndex++){
-                    tempGraph[spId][bIndex][priceIndex] = graph[spId][B[bIndex]][priceIndex];
-                }
-            }
-        }
-        return tempGraph;
     }
 
     // Group
@@ -215,15 +193,30 @@ contract SpectrumAction {
         _oneGroup.push(start);
         _visited.push(start);
         uint cur = start;
-        while (visited.length<B.length){
+        while (_visited.length<B.length){
             for (uint k = 0;k<spectrumGraph[cur].length;k++){
                 _visited.push(spectrumGraph[cur][k]);
+            }
+            qsort(_visited);
+            uint pt = 0;
+            uint prev = 9999999;
+            for (uint idx=0;idx <_visited.length;idx++){
+                if(_visited[idx]!=prev){
+                    prev = _visited[idx];
+                    _oneGroup[pt] = _visited[idx];
+                    pt++;
+                }
+            }
+            uint prevLen = _visited.length;
+            while(prevLen>pt){
+                _visited.pop();
+                pt++;
             }
             // LibArrayForUint256Utils.distinct(visited);
             if (_visited.length==B.length){
                 break;
             }
-            qsort(_visited);
+
             uint i=0; uint j=0;
             while (B[i]==_visited[j]){
                 i++;j++;
