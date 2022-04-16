@@ -11,12 +11,6 @@ contract SpectrumActionTest {
     SpectrumAction spectrumAction;
     function beforeAll () public {
         spectrumAction = new SpectrumAction();
-    }
-
-    function checkWinningProposal () public {
-        console.log("Running checkWinningProposal");
-        ballotToTest.vote(0);
-        Assert.equal(ballotToTest.winningProposal(), uint(0), "proposal at index 0 should be the winning proposal");
-        Assert.equal(ballotToTest.winnerName(), bytes32("candidate1"), "candidate1 should be the winner name");
+        console.log("Finish Initialization");
     }
 }

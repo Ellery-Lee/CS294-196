@@ -33,8 +33,11 @@ contract SpectrumAction {
 
     mapping(address => uint[]) public A;    //  The result of the final spectrum allocation
 
+    event logMessage(bytes32 s);
+
     // Registration: step 2 - 4
-    function sellerSubmit(uint i, uint j, uint frequency, uint price, uint V, uint T) public payable {
+    function sellerSubmit(uint i, uint j, uint frequency, uint V, uint T) public payable {
+        emit logMessage("Seller Sumbit");
         require(T > block.timestamp, "Spectrum expire");
         require(ledger[msg.sender] + msg.value >= V, "Not enough deposit");
 
