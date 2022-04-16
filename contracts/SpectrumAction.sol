@@ -2,6 +2,7 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 import "hardhat/console.sol";
+// import "./LibArrayForUint256Utils.sol";
 
 contract SpectrumAction {
 
@@ -24,6 +25,10 @@ contract SpectrumAction {
 
     // payment for buyer
     uint[] paymentBuyer;
+
+    //
+    uint[] oneGroup;
+    uint[] visited;
 
     struct Bid {
         uint i;             // buyer i
@@ -154,30 +159,58 @@ contract SpectrumAction {
     }
 
     // Group
-    function groupOneGraph(mapping(uint => uint[]) memory spectrumGraph) internal {
-        uint[] oneGroup;
-        LibArrayForUint256Utils.qsort(B);
-        uint start = B[0]; //improve
-        uint[] visited;
-        oneGroup.push(start);
-        visited.push(start);
+    function qsort(uint[] storage array) internal {
+        qsort(array, 0, array.length-1);
+    }
 
+    function qsort(uint[] storage array, uint begin, uint end) private {
+        if(begin >= end || end == uint(0)) return;
+        uint pivot = array[end];
+
+        uint store = begin;
+        uint i = begin;
+        for(;i<end;i++){
+            if(array[i] < pivot){
+                uint tmp = array[i];
+                array[i] = array[store];
+                array[store] = tmp;
+                store++;
+            }
+        }
+
+        array[end] = array[store];
+        array[store] = pivot;
+
+        qsort(array, begin, store-1);
+        qsort(array, store+1, end);
+    }
+
+    function groupOneGraph(mapping(uint => uint[]) storage spectrumGraph) internal returns (uint[] storage){
+        uint[] storage _oneGroup = oneGroup;
+        qsort(B);
+        uint start = B[0]; //improve
+        uint[] storage _visited = visited;
+        _oneGroup.push(start);
+        _visited.push(start);
+        uint cur = start;
         while (visited.length<B.length){
-            for (uint i = 0;i<spectrumGraph[cur].length;i++){
-                visited.push(spectrumGraph[cur][i]);
+            for (uint k = 0;k<spectrumGraph[cur].length;k++){
+                _visited.push(spectrumGraph[cur][k]);
             }
-            LibArrayForUint256Utils.distinct(visited);
-            if (visited.length==B.length){
-                LibArrayForUint256Utils.qsort(visited);
+            // LibArrayForUint256Utils.distinct(visited);
+            if (_visited.length==B.length){
+                break;
             }
+            qsort(_visited);
             uint i=0; uint j=0;
-            while (B[i]==visited[j]){
+            while (B[i]==_visited[j]){
                 i++;j++;
             }
-            oneGroup.push(B[i]);
-            visited.push(B[i]);
+            _oneGroup.push(B[i]);
+            _visited.push(B[i]);
+            cur = B[i];
         }
-        return oneGroup;
+        return _oneGroup;
     }
 
     function deleteUsedFromGraph() internal {
