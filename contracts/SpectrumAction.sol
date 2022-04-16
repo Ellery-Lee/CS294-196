@@ -1,6 +1,6 @@
 pragma solidity >=0.7.0 <0.9.0;
 
-contract spectrumAction {
+contract SpectrumAction {
 
     // Sij
     struct S {
@@ -35,7 +35,7 @@ contract spectrumAction {
 
     // Registration: step 2 - 4
     function sellerSubmit(uint i, uint j, uint frequency, uint price, uint V, uint T) public payable {
-        require(T > now, "Spectrum expire");
+        require(T > block.timestamp, "Spectrum expire");
         require(ledger[msg.sender] + msg.value >= V, "Not enough deposit");
 
         ledger[msg.sender] += (msg.value - V);
@@ -45,8 +45,8 @@ contract spectrumAction {
 
     // *Registration: step 5
     function deleteExpire() internal {
-        for (int i = 0; i < orderBook.length; i++) {
-            if (orderBook[i].T >= now) {
+        for (uint i = 0; i < orderBook.length; i++) {
+            if (orderBook[i].T >= block.timestamp) {
                 ESPOOL[msg.sender] -= orderBook[i].V;
                 ledger[msg.sender] += orderBook[i].V;
 
@@ -60,20 +60,20 @@ contract spectrumAction {
     // *Registration: step 6, sorting in increasing order
     function sortOrderBook(uint left, uint right) internal {
         if (left < right) {
-            int pivot = partition(left, right);
+            uint pivot = partition(left, right);
             sortOrderBook(left, pivot - 1);
             sortOrderBook(pivot + 1, right);
         }
 
     }
 
-    function partition(uint left, uint right) internal returns (int){
+    function partition(uint left, uint right) internal returns (uint){
         uint pivot = right--;
         while (left <= right) {
             if (orderBook[left].frequency > orderBook[right].frequency) swap(left, right--);
             else left++;
         }
-        swap(left, right);
+        swap(left, pivot);
         return left;
     }
 
@@ -85,7 +85,7 @@ contract spectrumAction {
     }
 
     // Bid Submission: step 1 - 5
-    function bidSubmission(int i, uint[] prices) public external {
+    function bidSubmission(uint i, uint[] memory prices) public payable {
         uint M = findMax(prices);
         require(ledger[msg.sender] + msg.value >= M, "Not enough deposit");
 
@@ -96,9 +96,9 @@ contract spectrumAction {
         B.push(msg.sender);
     }
 
-    function findMax(uint[] prices) internal returns (uint) {
+    function findMax(uint[] memory prices) internal returns (uint) {
         uint max = 0;
-        for (int i = 0; i < prices.length; i++) {
+        for (uint i = 0; i < prices.length; i++) {
             if (prices[i] > max) {
                 max = prices[i];
             }
