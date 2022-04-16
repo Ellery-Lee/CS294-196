@@ -19,6 +19,11 @@ contract SpectrumAction {
     //order book
     S[] public orderBook;
 
+    // payment for seller
+    uint[] paymentSeller;
+
+    // payment for buyer
+    uint[] paymentBuyer;
 
     struct Bid {
         uint i;             // buyer i
@@ -38,7 +43,7 @@ contract SpectrumAction {
     mapping(address => uint) public ledger;
     mapping(address => uint) public ESPOOL;
 
-    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
+    mapping(address => Bid[]) public graph; // Interference Graph, bid[] is the neighbours
 
     mapping(address => uint[]) public A;    //  The result of the final spectrum allocation
 
@@ -135,11 +140,27 @@ contract SpectrumAction {
     }
 
     // Group
-    function group() internal {}
+    function groupOneGraph() internal {
+
+    }
+
+    function deleteUsedFromGraph() internal {
+
+    }
+
+    function group() internal {
+
+    }
 
     // Allocation & Pricing
-    function allocation() internal {}
+    function allocation() internal {
 
+
+    }
+
+    function clearing() internal{
+
+    }
 
     function getOwner() external view returns (address) {
         return owner;
