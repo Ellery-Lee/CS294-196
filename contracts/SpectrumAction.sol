@@ -155,10 +155,29 @@ contract SpectrumAction {
 
     // Group
     function groupOneGraph(mapping(uint => uint[]) memory spectrumGraph) internal {
-        uint[] group;
-        uint start = B[0];
+        uint[] oneGroup;
+        LibArrayForUint256Utils.qsort(B);
+        uint start = B[0]; //improve
+        uint[] visited;
+        oneGroup.push(start);
+        visited.push(start);
 
-        spectrumGraph[start]
+        while (visited.length<B.length){
+            for (uint i = 0;i<spectrumGraph[cur].length;i++){
+                visited.push(spectrumGraph[cur][i]);
+            }
+            LibArrayForUint256Utils.distinct(visited);
+            if (visited.length==B.length){
+                LibArrayForUint256Utils.qsort(visited);
+            }
+            uint i=0; uint j=0;
+            while (B[i]==visited[j]){
+                i++;j++;
+            }
+            oneGroup.push(B[i]);
+            visited.push(B[i]);
+        }
+        return oneGroup;
     }
 
     function deleteUsedFromGraph() internal {
