@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0
+
 pragma solidity >=0.7.0 <0.9.0;
 import "hardhat/console.sol";
 
@@ -152,4 +154,7 @@ contract SpectrumAction {
         return ESPOOL[addr];
     }
 
+    function getBidWithAddr(address addr) external view returns (Bid memory) {
+        return addrToBid[addr];
+    }
 }
