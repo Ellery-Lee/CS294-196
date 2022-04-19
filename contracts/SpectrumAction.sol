@@ -16,7 +16,6 @@ contract SpectrumAction {
         uint T;             // expire time
 
     }
-
     //order book
     S[] public orderBook;
 
