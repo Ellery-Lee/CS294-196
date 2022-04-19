@@ -158,7 +158,78 @@ contract SpectrumAction {
     }
 
     // Group
+    function qsort(uint[] storage array) internal {
+        qsort(array, 0, array.length-1);
+    }
 
+    function qsort(uint[] storage array, uint begin, uint end) private {
+        if(begin >= end || end == uint(0)) return;
+        uint pivot = array[end];
+
+        uint store = begin;
+        uint i = begin;
+        for(;i<end;i++){
+            if(array[i] < pivot){
+                uint tmp = array[i];
+                array[i] = array[store];
+                array[store] = tmp;
+                store++;
+            }
+        }
+
+        array[end] = array[store];
+        array[store] = pivot;
+
+        qsort(array, begin, store-1);
+        qsort(array, store+1, end);
+    }
+
+    function groupOneGraph(mapping(uint => uint[]) storage spectrumGraph) internal returns (uint[] storage){
+        uint[] storage _oneGroup = oneGroup;
+        qsort(B);
+        uint start = B[0]; //improve
+        uint[] storage _visited = visited;
+        _oneGroup.push(start);
+        _visited.push(start);
+        uint cur = start;
+        while (_visited.length<B.length){
+            for (uint k = 0;k<spectrumGraph[cur].length;k++){
+                _visited.push(spectrumGraph[cur][k]);
+            }
+            qsort(_visited);
+            uint pt = 0;
+            uint prev = 9999999;
+            for (uint idx=0;idx <_visited.length;idx++){
+                if(_visited[idx]!=prev){
+                    prev = _visited[idx];
+                    _oneGroup[pt] = _visited[idx];
+                    pt++;
+                }
+            }
+            uint prevLen = _visited.length;
+            while(prevLen>pt){
+                _visited.pop();
+                pt++;
+            }
+            // LibArrayForUint256Utils.distinct(visited);
+            if (_visited.length==B.length){
+                break;
+            }
+
+            uint i=0; uint j=0;
+            while (B[i]==_visited[j]){
+                i++;j++;
+            }
+            _oneGroup.push(B[i]);
+            _visited.push(B[i]);
+            cur = B[i];
+        }
+        return _oneGroup;
+    }
+
+    function deleteUsedFromGraph() internal {
+
+    }
 
     function group() internal {
 
@@ -172,6 +243,14 @@ contract SpectrumAction {
 
     function clearing() internal{
 
+    }
+
+    mapping(uint => uint[]) spectrumGraph;
+    function getOneGroup() public returns (uint[] memory) {
+        spectrumGraph[1] = [2,3,4];
+        spectrumGraph[2] = [3,4,5];
+        uint[] memory res = groupOneGraph(spectrumGraph);
+        return res;
     }
 
     function getOwner() external view returns (address) {
@@ -193,11 +272,5 @@ contract SpectrumAction {
     function getBidWithAddr(address addr) external view returns (Bid memory) {
         return addrToBid[addr];
     }
-    mapping(uint => uint[]) spectrumGraph;
-    function getOneGroup() public returns (uint[] memory) {
-        spectrumGraph[1] = [2,3,4];
-        spectrumGraph[2] = [3,4,5];
-        uint[] memory res = groupOneGraph(spectrumGraph);
-        return res;
-    }
+
 }
