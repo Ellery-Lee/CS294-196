@@ -265,4 +265,11 @@ contract SpectrumAction {
     function getBidWithAddr(address addr) external view returns (Bid memory) {
         return addrToBid[addr];
     }
+    mapping(uint => uint[]) spectrumGraph;
+    function getOneGroup() public returns (uint[] memory) {
+        spectrumGraph[1] = [2,3,4];
+        spectrumGraph[2] = [3,4,5];
+        uint[] memory res = groupOneGraph(spectrumGraph);
+        return res;
+    }
 }
