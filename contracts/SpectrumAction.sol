@@ -16,6 +16,11 @@ contract SpectrumAction {
         uint T;             // expire time
 
     }
+
+    struct Graph {
+        mapping(uint => uint[]) g;
+    }
+
     //order book
     S[] public orderBook;
 
@@ -47,7 +52,9 @@ contract SpectrumAction {
     mapping(address => uint) public ledger;
     mapping(address => uint) public ESPOOL;
 
-    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
+    //    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
+
+    Graph[] graphList;
 
     mapping(address => uint[]) public A;    //  The result of the final spectrum allocation
 
