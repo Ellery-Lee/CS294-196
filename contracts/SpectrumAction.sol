@@ -152,7 +152,11 @@ contract SpectrumAction {
                     adj[j - 1] = G[spId][i][j];
                 }
 
-                graph[spId][G[spId][i][0]] = adj;
+                Graph storage graphConstruct = graphList.push();
+
+                graphConstruct.g[G[spId][i][0]] = adj;
+
+                delete adj;
             }
         }
     }
