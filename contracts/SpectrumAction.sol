@@ -238,8 +238,35 @@ contract SpectrumAction {
         return _oneGroup;
     }
 
-    function deleteUsedFromGraph() internal {
+    function deleteUsedFromGraph(uint[][] memory usedList, uint idx) public {
+        for (uint i = 0; i < usedList.length; i++) {
+            uint[] memory used = usedList[i];
+            for (uint j = 0; j < used.length; j++) {
+                uint usedId = used[j];
+                delete graphList[idx].g[usedId];
+                for (uint k = 0; k < B.length; k++) {
+                    // if the key exists
+                    if (graphList[idx].g[B[k]].length > 0) {
+                        // delete the usedId from the array if exists
+                        for (uint m = 0; m < graphList[idx].g[B[k]].length; m++) {
+                            if (graphList[idx].g[B[k]][m] == usedId) {
+                                // replace with the last element
+                                graphList[idx].g[B[k]][m] = graphList[idx].g[B[k]][graphList[idx].g[B[k]].length-1];
+                                // then delete the last element
+                                delete graphList[idx].g[B[k]][graphList[idx].g[B[k]].length-1];
+                                graphList[idx].g[B[k]].pop();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
+        // FIX: delete了mapping的key之后的length为0，如何和本来length就为0的区分
+        
+        // console.log(graphList[1].g[1].length);
+        // console.log(graphList[1].g[2].length);
     }
 
     function group() internal {
