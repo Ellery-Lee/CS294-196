@@ -160,13 +160,43 @@ contract SpectrumAction {
                 }
 
                 Graph storage graphConstruct = graphList.push();
-
                 graphConstruct.g[G[spId][i][0]] = adj;
 
                 delete adj;
             }
         }
     }
+
+    //print graph
+    function getGraph() public returns(uint[3][3][] memory G){
+        console.log("getGraph start", 1);
+//        uint[3][3][] memory tempGraph = new uint[3][3][](3);
+        for(uint  spId = 0; spId < graphList.length; spId++){
+            Graph storage graph = graphList[spId];
+            for(uint bIndex = 0; bIndex < 1; bIndex++){
+                for(uint priceIndex = 0; priceIndex < 3; priceIndex++){
+//                    tempGraph[spId][bIndex][priceIndex] = graph.g[bIndex][priceIndex];
+                    console.log("current node", graph.g[bIndex][priceIndex]);
+                }
+            }
+        }
+        console.log("getGraph finish", 1);
+        console.log("tempGraph", tempGraph.length);
+        console.log("graphList", graphList.length);
+//        for(uint i = 0; i < tempGraph.length; i++){
+//            console.log("graph node", i);
+//            for(uint j = 0; j < tempGraph[i].length; j++){
+//                console.log("current buyer", j);
+//                for(uint k = 0; k < tempGraph[i][j].length; k++){
+//                    console.log("current node", G[i][j][k]);
+//                }
+//            }
+//        }
+        return tempGraph;
+    }
+
+
+
 
     // Group
     function qsort(uint[] storage array) internal {
