@@ -168,31 +168,27 @@ contract SpectrumAction {
 
     // print graph
     // layer print
-    //
     function getGraph() public {
-        console.log("getGraph start", 1);
-        console.log("B size", B.length);
         for(uint  spId = 0; spId < graphList.length; spId++){
             Graph storage graph = graphList[spId];
             console.log("current spId", spId);
-            for(uint bIndex = 0; bIndex < 3; bIndex++){
+            for(uint bIndex = 0; bIndex < B.length; bIndex++){
                 console.log("current buyerIndex", bIndex);
                 uint[] memory test = graph.g[bIndex];
-                console.log("start memorytest", bIndex);
                 if(test.length == 1 && test[0] == MAX_INT){
                     continue;
                 }
-                console.log("pass memorytest", bIndex);
                 for(uint priceIndex = 0; priceIndex < 2; priceIndex++){
-                    console.log("enter array", bIndex);
-                    console.log("array size", graph.g[bIndex].length);
                     console.log("current node", graph.g[bIndex][priceIndex]);
                 }
             }
         }
     }
 
-
+    // getIndependentSet
+//    function getIndependentSet(Graph storage graph, uint bIndex, uint target) public returns(uint[] memory){
+//        if()
+//    }
 
 
     // Group
