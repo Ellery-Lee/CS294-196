@@ -60,6 +60,8 @@ contract SpectrumAction {
 
     event logMessage(bytes32 s);
 
+    uint MAX_INT = 2**256 - 1;
+
     modifier isOwner() {
         require(msg.sender == owner, "Caller is not owner");
         _;
@@ -273,7 +275,10 @@ contract SpectrumAction {
             uint[] memory used = usedList[i];
             for (uint j = 0; j < used.length; j++) {
                 uint usedId = used[j];
-                delete graphList[idx].g[usedId];
+                uint[] memory deleted = new uint[](1);
+                deleted[0] = MAX_INT;
+                graphList[idx].g[usedId] = deleted;
+                delete deleted;
                 for (uint k = 0; k < B.length; k++) {
                     // if the key exists
                     if (graphList[idx].g[B[k]].length > 0) {
@@ -293,10 +298,8 @@ contract SpectrumAction {
             }
         }
 
-        // FIX: delete了mapping的key之后的length为0，如何和本来length就为0的区分
-        
-        // console.log(graphList[1].g[1].length);
-        // console.log(graphList[1].g[2].length);
+        console.log(graphList[0].g[1][0]);
+        console.log(graphList[0].g[2].length);
     }
 
     function group() internal {
