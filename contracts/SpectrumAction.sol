@@ -341,4 +341,8 @@ contract SpectrumAction {
         return addrToBid[addr];
     }
 
+    function getBuyer(uint id) external view returns (uint) {
+        return B[id];
+    }
+
 }
