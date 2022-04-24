@@ -56,6 +56,8 @@ contract SpectrumAction {
 
     Graph[] graphList;
 
+    uint[][] groupList;
+
     mapping(address => uint[]) public A;    //  The result of the final spectrum allocation
 
     event logMessage(bytes32 s);
@@ -270,26 +272,26 @@ contract SpectrumAction {
         return _oneGroup;
     }
 
-    function deleteUsedFromGraph(uint[][] memory usedList, uint idx) public {
-        for (uint i = 0; i < usedList.length; i++) {
-            uint[] memory used = usedList[i];
+    function deleteUsedFromGraph(uint spId) internal {
+        for (uint i = 0; i < groupList.length; i++) {
+            uint[] memory used = groupList[i];
             for (uint j = 0; j < used.length; j++) {
                 uint usedId = used[j];
                 uint[] memory deleted = new uint[](1);
                 deleted[0] = MAX_INT;
-                graphList[idx].g[usedId] = deleted;
+                graphList[spId].g[usedId] = deleted;
                 delete deleted;
                 for (uint k = 0; k < B.length; k++) {
                     // if the key exists
-                    if (graphList[idx].g[B[k]].length > 0) {
+                    if (graphList[spId].g[B[k]].length > 0) {
                         // delete the usedId from the array if exists
-                        for (uint m = 0; m < graphList[idx].g[B[k]].length; m++) {
-                            if (graphList[idx].g[B[k]][m] == usedId) {
+                        for (uint m = 0; m < graphList[spId].g[B[k]].length; m++) {
+                            if (graphList[spId].g[B[k]][m] == usedId) {
                                 // replace with the last element
-                                graphList[idx].g[B[k]][m] = graphList[idx].g[B[k]][graphList[idx].g[B[k]].length-1];
+                                graphList[spId].g[B[k]][m] = graphList[spId].g[B[k]][graphList[spId].g[B[k]].length-1];
                                 // then delete the last element
-                                delete graphList[idx].g[B[k]][graphList[idx].g[B[k]].length-1];
-                                graphList[idx].g[B[k]].pop();
+                                delete graphList[spId].g[B[k]][graphList[spId].g[B[k]].length-1];
+                                graphList[spId].g[B[k]].pop();
                                 break;
                             }
                         }
@@ -298,12 +300,39 @@ contract SpectrumAction {
             }
         }
 
-        console.log(graphList[0].g[1][0]);
-        console.log(graphList[0].g[2].length);
+        console.log(graphList[1].g[1][0]);
+        console.log(graphList[1].g[2].length);
     }
 
-    function group() internal {
+    function getMaxGroup(uint spId) internal returns (uint[] memory) {
+        uint[] memory group = new uint[](1);
+        group[0] = 1;
+        return group;
+    }
 
+    function group() public {
+        for (uint spId = 0; spId < graphList.length; spId++) {
+            deleteUsedFromGraph(spId);
+            uint[] memory group = getMaxGroup(spId);
+            groupList.push(group);
+        }
+
+    }
+
+    function getLowestBidder(uint spId) internal returns (uint) {
+        uint minPrice = MAX_INT;
+        uint minBuyer;
+        uint[] memory group = groupList[spId];
+        for (uint i = 0; i < group.length; i++) {
+            uint id = group[i];
+            uint price = addrToBid[idToAddr[id]].prices[spId];
+            if (price < minPrice) {
+                minPrice = price;
+                minBuyer = id;
+            }
+        }
+
+        return minBuyer;
     }
 
     // Allocation & Pricing
