@@ -237,7 +237,7 @@ contract SpectrumAction {
             // for (uint j = 0; j < currSet.length; j++) {
             //     console.log(currSet[j]);
             // }
-            console.log(canAdd2Set(graphList[spId], buyers[i]));
+            // console.log(canAdd2Set(graphList[spId], buyers[i]));
             if (canAdd2Set(graphList[spId], buyers[i])) {
                 currSet.push(buyers[i]);
                 if (currSet.length > maxSet.length) {
@@ -387,6 +387,7 @@ contract SpectrumAction {
     function getLowestBidder(uint spId) internal returns (uint) {
         uint minPrice = MAX_INT;
         uint minBuyer;
+        uint minBuyerIdx;
         uint[] memory group = groupList[spId];
         for (uint i = 0; i < group.length; i++) {
             uint id = group[i];
@@ -394,16 +395,35 @@ contract SpectrumAction {
             if (price < minPrice) {
                 minPrice = price;
                 minBuyer = id;
+                minBuyerIdx = i;
             }
         }
+
+        group[minBuyerIdx] = group[group.length-1];
+        delete group[group.length-1];
+        group.pop();
 
         return minBuyer;
     }
 
     // Allocation & Pricing
-    function allocation() internal {
-
-
+    function allocation() public {
+        for (uint spId = 0; spId < graphList.length; spId++) {
+            uint lowestBidder = getLowestBidder(spId);
+            uint price = addrToBid[idToAddr[id]].prices[spId];
+            uint totalPrice = price * groupList[spId].length;
+            uint sellerValue = orderBook[spId].V;
+            if (totalPrice > sellerValue) {
+                console.log("auction success for spectrum: ", spId);
+                console.log("total price: ", totalPrice);
+                console.log("successfull buyer: ");
+                for (uint i = 0; i < groupList[spId].length; i++) {
+                    console.log(groupList[spId][i]);
+                }
+            } else {
+                console.log("auction fail for spectrum: ", spId);
+            }
+        }
     }
 
     function clearing() internal{
