@@ -185,10 +185,26 @@ contract SpectrumAction {
         }
     }
 
-    // getIndependentSet
-//    function getIndependentSet(Graph storage graph, uint bIndex, uint target) public returns(uint[] memory){
-//        if()
-//    }
+    // canAdd2Set
+    // 1 -- 2
+    // |    |
+    // 3 -- 4
+    function canAdd2Set(Graph storage graph, uint target, uint[] memory currentSet) internal returns(bool){
+        for(uint i = 0; i < currentSet.length; i++){
+            if(containsTarget(target, graph.g[i])){
+                return false;
+            }
+        }
+        return true;
+    }
+    function containsTarget(uint target, uint[] array) internal returns(bool){
+        for(int i = 0; i < array.length; i++){
+            if(array[i] == target){
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     // Group
