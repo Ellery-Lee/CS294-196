@@ -51,7 +51,6 @@ contract SpectrumAction {
 
     mapping(address => uint) public ledger;
     mapping(address => uint) public ESPOOL;
-    uint256 MAX_INT = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
 
     //    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
 
