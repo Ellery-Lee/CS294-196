@@ -371,14 +371,8 @@ contract SpectrumAction {
             }
         }
 
-        console.log(graphList[1].g[1][0]);
-        console.log(graphList[1].g[2].length);
-    }
-
-    function getMaxGroup(uint spId) internal returns (uint[] memory) {
-        uint[] memory group = new uint[](1);
-        group[0] = 1;
-        return group;
+        // console.log(graphList[1].g[1][0]);
+        // console.log(graphList[1].g[2].length);
     }
 
     function group() public {
