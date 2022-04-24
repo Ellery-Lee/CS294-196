@@ -62,6 +62,9 @@ contract SpectrumAction {
 
     uint MAX_INT = 2**256 - 1;
 
+    uint[] maxSet;
+    uint[] currSet;
+
     modifier isOwner() {
         require(msg.sender == owner, "Caller is not owner");
         _;
@@ -185,13 +188,75 @@ contract SpectrumAction {
         }
     }
 
+    function getUndeleteBuyer(uint spId) public returns (uint[] memory buyers) {
+        uint buyerCount = 0;
+        Graph storage graph = graphList[spId];
+        for(uint bIndex = 0; bIndex < B.length; bIndex++){
+            if(graph.g[bIndex].length == 1 && graph.g[bIndex][0] == MAX_INT){
+                continue;
+            }
+            buyerCount++;
+        }
+
+        uint[] memory buyers = new uint[](buyerCount);
+        uint i = 0;
+        for(uint bIndex = 0; bIndex < B.length; bIndex++){
+            if(graph.g[bIndex].length == 1 && graph.g[bIndex][0] == MAX_INT){
+                continue;
+            }
+            buyers[i++] = B[bIndex];
+        }
+        return buyers;
+    }
+
+    function initGroupingSet() public {
+        while (maxSet.length > 0) {
+            maxSet.pop();
+        }
+
+        while (currSet.length > 0) {
+            currSet.pop();
+        }
+    }
+
+    function getMaxGroup(uint spId) public returns (uint[] memory group) {
+        initGroupingSet();
+        initGroupingSet();
+        uint[] memory buyers = getUndeleteBuyer(spId);
+        getMaxCore(0, buyers.length - 1, buyers, spId);
+        maxSet.push(1);
+        maxSet.push(2);
+
+        return maxSet;
+    }
+
+    function getMaxCore(uint currBuyerId, uint maxBuyerId, uint[] memory buyers, uint spId) private {
+        for (uint i = currBuyerId; i <= maxBuyerId; i++) {
+            console.log("buyerId", buyers[i]);
+            console.log("Curr Set");
+            for (uint j = 0; j < currSet.length; j++) {
+                console.log(currSet[j]);
+            }
+            console.log(canAdd2Set(graphList[spId], buyers[i]));
+            if (canAdd2Set(graphList[spId], buyers[i])) {
+                currSet.push(buyers[i]);
+                if (currSet.length > maxSet.length) {
+                    maxSet = currSet;
+                }
+                getMaxCore(currBuyerId + 1, maxBuyerId, buyers, spId);
+                currSet.pop();
+            }
+        }
+    }
+
+
     // canAdd2Set
     // 1 -- 2
     // |    |
     // 3 -- 4
-    function canAdd2Set(Graph storage graph, uint target, uint[] memory currentSet) internal returns(bool){
-        for(uint i = 0; i < currentSet.length; i++){
-            if(containsTarget(target, graph.g[i])){
+    function canAdd2Set(Graph storage graph, uint target) internal returns(bool){
+        for(uint i = 0; i < currSet.length; i++){
+            if(containsTarget(target, graph.g[currSet[i]])){
                 return false;
             }
         }
@@ -199,7 +264,7 @@ contract SpectrumAction {
     }
     function containsTarget(uint target, uint[] memory array) internal returns(bool){
         for(uint i = 0; i < array.length; i++){
-            console.log("current node", array[i]);
+            // console.log("current node", array[i]);
             if(array[i] == target){
                 return true;
             }
