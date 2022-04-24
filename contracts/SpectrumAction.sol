@@ -224,26 +224,24 @@ contract SpectrumAction {
         initGroupingSet();
         uint[] memory buyers = getUndeleteBuyer(spId);
         getMaxCore(0, buyers.length - 1, buyers, spId);
-        maxSet.push(1);
-        maxSet.push(2);
 
         return maxSet;
     }
 
     function getMaxCore(uint currBuyerId, uint maxBuyerId, uint[] memory buyers, uint spId) private {
         for (uint i = currBuyerId; i <= maxBuyerId; i++) {
-            console.log("buyerId", buyers[i]);
-            console.log("Curr Set");
-            for (uint j = 0; j < currSet.length; j++) {
-                console.log(currSet[j]);
-            }
+            // console.log("buyerId", buyers[i]);
+            // console.log("Curr Set");
+            // for (uint j = 0; j < currSet.length; j++) {
+            //     console.log(currSet[j]);
+            // }
             console.log(canAdd2Set(graphList[spId], buyers[i]));
             if (canAdd2Set(graphList[spId], buyers[i])) {
                 currSet.push(buyers[i]);
                 if (currSet.length > maxSet.length) {
                     maxSet = currSet;
                 }
-                getMaxCore(currBuyerId + 1, maxBuyerId, buyers, spId);
+                getMaxCore(i + 1, maxBuyerId, buyers, spId);
                 currSet.pop();
             }
         }
