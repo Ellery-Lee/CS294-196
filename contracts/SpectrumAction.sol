@@ -197,8 +197,9 @@ contract SpectrumAction {
         }
         return true;
     }
-    function containsTarget(uint target, uint[] array) internal returns(bool){
-        for(int i = 0; i < array.length; i++){
+    function containsTarget(uint target, uint[] memory array) internal returns(bool){
+        for(uint i = 0; i < array.length; i++){
+            console.log("current node", array[i]);
             if(array[i] == target){
                 return true;
             }
