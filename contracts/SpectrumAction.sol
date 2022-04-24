@@ -388,7 +388,7 @@ contract SpectrumAction {
         uint minPrice = MAX_INT;
         uint minBuyer;
         uint minBuyerIdx;
-        uint[] memory group = groupList[spId];
+        uint[] storage group = groupList[spId];
         for (uint i = 0; i < group.length; i++) {
             uint id = group[i];
             uint price = addrToBid[idToAddr[id]].prices[spId];
@@ -410,7 +410,7 @@ contract SpectrumAction {
     function allocation() public {
         for (uint spId = 0; spId < graphList.length; spId++) {
             uint lowestBidder = getLowestBidder(spId);
-            uint price = addrToBid[idToAddr[id]].prices[spId];
+            uint price = addrToBid[idToAddr[lowestBidder]].prices[spId];
             uint totalPrice = price * groupList[spId].length;
             uint sellerValue = orderBook[spId].V;
             if (totalPrice > sellerValue) {
