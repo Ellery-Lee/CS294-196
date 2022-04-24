@@ -51,6 +51,7 @@ contract SpectrumAction {
 
     mapping(address => uint) public ledger;
     mapping(address => uint) public ESPOOL;
+    uint256 MAX_INT = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
 
     //    mapping(uint => uint[])[] public graph; // Interference Graph, bid[] is the neighbours
 
@@ -154,47 +155,42 @@ contract SpectrumAction {
 
     function constructGraph(uint[][][] memory G) public isOwner {
         for (uint spId = 0; spId < G.length; spId++) {
+            Graph storage graphConstruct = graphList.push();
             for (uint i = 0; i < G[spId].length; i++) {
                 uint[] memory adj = new uint[](G[spId][i].length - 1);
 
                 for (uint j = 1; j < G[spId][i].length; j++) {
                     adj[j - 1] = G[spId][i][j];
                 }
-
-                Graph storage graphConstruct = graphList.push();
                 graphConstruct.g[G[spId][i][0]] = adj;
-
-                delete adj;
             }
         }
     }
 
-    //print graph
-    function getGraph() public returns(uint[3][3][] memory G){
+    // print graph
+    // layer print
+    //
+    function getGraph() public {
         console.log("getGraph start", 1);
-//        uint[3][3][] memory tempGraph = new uint[3][3][](3);
+        console.log("B size", B.length);
         for(uint  spId = 0; spId < graphList.length; spId++){
             Graph storage graph = graphList[spId];
-            for(uint bIndex = 0; bIndex < 1; bIndex++){
-                for(uint priceIndex = 0; priceIndex < 3; priceIndex++){
-//                    tempGraph[spId][bIndex][priceIndex] = graph.g[bIndex][priceIndex];
+            console.log("current spId", spId);
+            for(uint bIndex = 0; bIndex < 3; bIndex++){
+                console.log("current buyerIndex", bIndex);
+                uint[] memory test = graph.g[bIndex];
+                console.log("start memorytest", bIndex);
+                if(test.length == 1 && test[0] == MAX_INT){
+                    continue;
+                }
+                console.log("pass memorytest", bIndex);
+                for(uint priceIndex = 0; priceIndex < 2; priceIndex++){
+                    console.log("enter array", bIndex);
+                    console.log("array size", graph.g[bIndex].length);
                     console.log("current node", graph.g[bIndex][priceIndex]);
                 }
             }
         }
-        console.log("getGraph finish", 1);
-        console.log("tempGraph", tempGraph.length);
-        console.log("graphList", graphList.length);
-//        for(uint i = 0; i < tempGraph.length; i++){
-//            console.log("graph node", i);
-//            for(uint j = 0; j < tempGraph[i].length; j++){
-//                console.log("current buyer", j);
-//                for(uint k = 0; k < tempGraph[i][j].length; k++){
-//                    console.log("current node", G[i][j][k]);
-//                }
-//            }
-//        }
-        return tempGraph;
     }
 
 
