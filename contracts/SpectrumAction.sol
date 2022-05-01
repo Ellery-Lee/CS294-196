@@ -195,7 +195,7 @@ contract SpectrumAction {
         uint buyerCount = 0;
         Graph storage graph = graphList[spId];
         for(uint bIndex = 0; bIndex < B.length; bIndex++){
-            if(graph.g[bIndex].length == 1 && graph.g[bIndex][0] == MAX_INT){
+            if(graph.g[B[bIndex]].length == 1 && graph.g[B[bIndex]][0] == MAX_INT){
                 continue;
             }
             buyerCount++;
@@ -204,7 +204,7 @@ contract SpectrumAction {
         uint[] memory buyers = new uint[](buyerCount);
         uint i = 0;
         for(uint bIndex = 0; bIndex < B.length; bIndex++){
-            if(graph.g[bIndex].length == 1 && graph.g[bIndex][0] == MAX_INT){
+            if(graph.g[B[bIndex]].length == 1 && graph.g[B[bIndex]][0] == MAX_INT){
                 continue;
             }
             buyers[i++] = B[bIndex];
@@ -227,6 +227,10 @@ contract SpectrumAction {
         initGroupingSet();
         initGroupingSet();
         uint[] memory buyers = getUndeleteBuyer(spId);
+        console.log("undeleted buyers:");
+        for (uint i = 0; i < buyers.length; i++) {
+            console.log(buyers[i]);
+        }
         getMaxCore(0, buyers.length - 1, buyers, spId);
 
         return maxSet;
@@ -350,6 +354,7 @@ contract SpectrumAction {
             uint[] memory used = groupList[i];
             for (uint j = 0; j < used.length; j++) {
                 uint usedId = used[j];
+                console.log("delete node: ", usedId);
                 uint[] memory deleted = new uint[](1);
                 deleted[0] = MAX_INT;
                 graphList[spId].g[usedId] = deleted;
