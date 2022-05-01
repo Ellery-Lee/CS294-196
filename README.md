@@ -42,3 +42,10 @@ bidSubmission
 3 [2,4]
 4 [1,4]
 ```
+
+```
+Seller submission
+i j fre V T   msg.value
+1 1 30 5 100000000  1
+2 1 40 4 100000000  2
+```

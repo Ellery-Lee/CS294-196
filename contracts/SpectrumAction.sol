@@ -167,6 +167,7 @@ contract SpectrumAction {
                     adj[j - 1] = G[spId][i][j];
                 }
                 graphConstruct.g[G[spId][i][0]] = adj;
+                delete adj;
             }
         }
     }
@@ -221,6 +222,7 @@ contract SpectrumAction {
         }
     }
 
+    // Reference https://www.geeksforgeeks.org/maximal-independent-set-from-a-given-graph-using-backtracking/
     function getMaxGroup(uint spId) public returns (uint[] memory group) {
         initGroupingSet();
         initGroupingSet();
