@@ -380,6 +380,11 @@ contract SpectrumAction {
             deleteUsedFromGraph(spId);
             uint[] memory group = getMaxGroup(spId);
             groupList.push(group);
+            console.log("Spectrum: ", spId);
+            console.log("group result: ");
+            for (uint i = 0; i < group.length; i++) {
+                console.log(group[i]);
+            }
         }
 
     }
@@ -411,6 +416,8 @@ contract SpectrumAction {
         for (uint spId = 0; spId < graphList.length; spId++) {
             uint lowestBidder = getLowestBidder(spId);
             uint price = addrToBid[idToAddr[lowestBidder]].prices[spId];
+            console.log("Spectrum: ", spId);
+            console.log("price per person: ", price);
             uint totalPrice = price * groupList[spId].length;
             uint sellerValue = orderBook[spId].V;
             if (totalPrice > sellerValue) {
