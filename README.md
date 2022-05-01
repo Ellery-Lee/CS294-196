@@ -32,6 +32,7 @@ i j fre V T   msg.value
 
 ```
 construct graph:
+[[[1,2,3],[2,1,4],[3,1],[4,2]]]
 
 ```
 
