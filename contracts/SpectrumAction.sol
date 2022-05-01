@@ -178,14 +178,14 @@ contract SpectrumAction {
         for(uint  spId = 0; spId < graphList.length; spId++){
             Graph storage graph = graphList[spId];
             console.log("current spId", spId);
-            for(uint bIndex = 0; bIndex < B.length; bIndex++){
-                console.log("current buyerIndex", bIndex);
-                uint[] memory test = graph.g[bIndex];
+            for(uint bIndex = 0; bIndex < 4; bIndex++){
+                console.log("current buyerId", B[bIndex]);
+                uint[] memory test = graph.g[B[bIndex]];
                 if(test.length == 1 && test[0] == MAX_INT){
                     continue;
                 }
-                for(uint priceIndex = 0; priceIndex < 2; priceIndex++){
-                    console.log("current node", graph.g[bIndex][priceIndex]);
+                for(uint priceIndex = 0; priceIndex < graph.g[B[bIndex]].length; priceIndex++){
+                    console.log("current node", graph.g[B[bIndex]][priceIndex]);
                 }
             }
         }
